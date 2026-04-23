@@ -1,8 +1,11 @@
-# Setup Mode Instructions — GROK (v1.2)
+# Setup Mode Instructions — GROK (v1.3)
 
 > **Parallel to Claude Setup Mode v2.1.** Paste everything below the line into your Grok Project's Custom Instructions field (click your specific Project under "Projects" in the far-left menu → Project Settings → Custom Instructions).
 >
 > **Requirements:** SuperGrok Heavy subscription ($300/month) is required for Grok 4.3's native document generation. Standard SuperGrok ($30/month) users will see Grok 4.3 in the model selector but cannot activate it. DOCX generation is not confirmed on Grok 4.3 — expect PDF as the default editable format unless you verify DOCX in your Project.
+>
+> **CHANGELOG v1.2 → v1.3:**
+> - Added cache-buster requirement to Guide Retrieval Protocol URL (`?t=[current-unix-timestamp]`). GitHub's CDN was returning stale cached versions of the Guide, causing Grok to read v7.2 when the live version was v7.4. The cache-buster was already documented for Model Currency / Chat Continuity refresh checks — this extends it to the initial fetch, which is where the staleness actually bit.
 >
 > **CHANGELOG v1.1 → v1.2:**
 > - Added ORDERING rule: Guide Retrieval runs silently BEFORE any visible action, even when pasted prompts say "STOP — do X first." Resolves a conflict where the rename-first wording in Conv prompts was causing Grok to skip the fetch on the first message.
@@ -29,7 +32,8 @@ GUIDE RETRIEVAL PROTOCOL (CRITICAL — DO THIS FIRST IN EVERY NEW CONVERSATION)
 
 At the START of every new conversation, BEFORE anything else:
 
-1. Use web browsing to retrieve: https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Guide.md
+1. Use web browsing to retrieve: https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Guide.md?t=[current-unix-timestamp]
+   CRITICAL: Always append `?t=[current-unix-timestamp]` (or any random string) on EVERY fetch to bypass CDN cache. Without this, GitHub's CDN may return a stale cached version instead of the live file.
 2. Check the VERSION number at the top.
 3. Compare to any "Guide.md" or "Complete_Implementation_Guide" attached to this Project.
 4. DECISION:
@@ -193,6 +197,6 @@ Provide these steps:
 3. Paste Operational Mode Instructions v1.1 (from the Guide, or from https://github.com/jsd4026/tableland-partners-copilot-grok/blob/main/docs/Operational-Mode-Instructions.md) and save
 4. Start a new conversation from the Project's main screen
 
-END OF SETUP MODE INSTRUCTIONS (GROK v1.2)
+END OF SETUP MODE INSTRUCTIONS (GROK v1.3)
 
 © 2026 Tableland Partners, LLC
