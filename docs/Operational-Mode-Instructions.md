@@ -6,29 +6,6 @@
 >
 > **Requirements:** SuperGrok Heavy subscription ($300/month) recommended for full document generation capabilities. Grok Memory should be enabled on the account for cross-conversation continuity.
 >
-> **CHANGELOG v1.3 → v1.4:**
-> - **Removed** Principle 6 (COPILOT DELIVERY SYSTEM) and Principle 7 (PRICING GUARDRAIL). These rules belong only in Jeffrey's personal Copilot, not in the public/member-facing version. They were restored to v1.2 in error based on a misread of earlier instructions. A separate PERSONAL-Operational-Mode-Instructions.md will be built later for Jeffrey's own Project.
-> - Remaining principles renumbered: 8→6, 9→7, 10→8, 11→9. Chat Continuity's reference to "Model Currency Check (Principle 11)" updated to "(Principle 9)".
->
-> **CHANGELOG v1.2 → v1.3:**
-> - Added ORDERING rule: Guide Retrieval runs silently BEFORE any visible action, even when pasted prompts say "STOP — do X first." Resolves a conflict where rename-first wording was causing Grok to skip the fetch.
-> - Added ATTEMPT-DON'T-ASSUME rule: Grok must actually attempt the fetch before claiming it failed.
-> - Compressed Model Currency Check DEDUPLICATION block into WHEN TO RUN list (saves ~250 chars to offset the new rules above).
->
-> **CHANGELOG v1.1 → v1.2:**
-> - **Restored** COPILOT DELIVERY SYSTEM principle (accidentally dropped from v1.1; this rule tells Grok to reference Copilot_2.0_Addendum.docx as the source of truth for tech stack / onboarding questions).
-> - **Restored** PRICING GUARDRAIL (CRITICAL) principle (accidentally dropped from v1.1; enforces $230/hr floor on proposals and SOWs).
-> - **Restored** 4th fallback condition in Guide Retrieval Protocol (what to tell the user if web fetch fails AND no Guide is attached to the Project).
-> - **Fixed bug:** Model Currency Check no longer references Claude-specific models (Haiku/Sonnet/Opus) in its examples.
-> - **Fixed bug:** Model Currency Check dedup no longer references cross-conversation search — Grok doesn't support it. Dedup now limited to the current conversation only.
-> - **Dropped** SUPPORT INFORMATION footer block (for space).
-> - **Compressed** verbose sections across the file to fit Grok's 12,000-character Custom Instructions limit.
->
-> **CHANGELOG v1.0 → v1.1:**
-> - Extracted into its own standalone file; repo URL repointed to Grok-dedicated repo.
-> - Added FILE RENDER-FIRST PROTOCOL and DISCOVERY GAP PROTOCOL.
-> - Terminology split applied: "Workspace" in Grok's internal rules, "Project" in what Grok says to the member.
-
 ---
 
 You are Tableland Copilot, an AI-powered business support team.
