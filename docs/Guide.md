@@ -2,32 +2,6 @@ TABLELAND COPILOT GUIDE — VERSION 7.4-GROK
 
 Last Updated 2026-04-23 (revision d) | This is the Grok-native fork of the Tableland Copilot Guide, designed for Grok 4.3 and newer on SuperGrok Heavy. Parallel version 6.4 exists for Claude; this file replaces all Claude-specific references with Grok equivalents.
 
-CHANGELOG v7.3 → v7.4 (revision d):
-• Removed Principle 6 (COPILOT DELIVERY SYSTEM) and Principle 7 (PRICING GUARDRAIL) from the Ops Mode mirror. These rules belong only in Jeffrey's personal Copilot, not in the public/member-facing version. They were added to v7.2 in error. A separate personal Operational Mode file will be built later and kept out of this public repo.
-• Remaining Ops Mode principles renumbered: 8→6, 9→7, 10→8, 11→9.
-• Ops Mode mirror re-synced to standalone file v1.4.
-
-CHANGELOG v7.2 → v7.3 (revision c):
-• Fixed an ordering conflict between Guide Retrieval Protocol ("DO THIS FIRST") and Conv prompt rename wording ("⚠️ STOP - RENAME FIRST"). Grok was silently skipping the fetch because the pasted Conv prompt appeared more imperative. Resolved by: (a) adding explicit ORDERING rule to both Setup and Ops Mode (fetch runs silently BEFORE any visible response), and (b) softening Conv prompt wording from "Before doing ANYTHING else" to "Before any other visible action (Guide Retrieval runs silently first)".
-• Added ATTEMPT-DON'T-ASSUME rule to both Setup and Ops Mode: Grok must actually attempt the fetch before claiming failure. Prevents confabulation of "web browsing disabled" when the fetch hasn't been tried.
-• Both embedded mirrors re-synced to the new Setup Mode v1.2 and Operational Mode v1.3 standalone files.
-• Conv prompt header "⚠️ STOP - RENAME FIRST ⚠️" softened to "⚠️ RENAME BEFORE CONTENT ⚠️" across all 10 Conv prompts (0-9).
-
-CHANGELOG v7.1 → v7.2 (revision b):
-• Setup Mode and Operational Mode mirrors synced to the compressed v1.1 and v1.2 standalone files (respectively). Both embedded blocks now carry an explicit MIRROR NOTICE naming the standalone file as the source of truth.
-• Operational Mode mirror now includes the restored PRICING GUARDRAIL and COPILOT DELIVERY SYSTEM principles, fixed model-name bugs, and the restored 4th fallback in Guide Retrieval.
-• Setup Mode mirror now includes the restored RESPONSE STYLE (CRITICAL) block and /mnt/user-data/outputs/ save-path requirement.
-• Both mirrors compressed to match the Grok 12,000-char Custom Instructions limit (substance preserved).
-
-CHANGELOG v7.0 → v7.1 (revision a):
-• Terminology split applied: "Workspace" is used in Grok's internal rules (what Grok reads/does); "Project" is used in everything Grok says to the member (UI-visible text). Grok internally calls these containers Workspaces, but members see "Projects" in the sidebar — the Copilot must match what the member sees.
-• Guide Retrieval URL repointed to the new Grok-dedicated repo: https://github.com/jsd4026/tableland-partners-copilot-grok
-• Rename instructions corrected (hover on current conversation in left Conversations panel, click ⋯, select Rename) — replaces the inaccurate right-click instruction
-• "Start a new conversation" steps corrected (click your specific Project under "Projects" in the far-left menu to return to the Project's main screen, then use the input field there) — replaces the inaccurate "click Workspaces" flow
-• FILE RENDER-FIRST PROTOCOL hoisted to Critical Rule #1 (new rule). Grok must lead every document-delivery response with the render_file component before any path, text, or explanation. Path is a fallback only.
-• DISCOVERY GAP PROTOCOL added to Conversation 1 (and all other document-generating conversations). Before drafting each document, Grok must compare Conv 0 / existing files against what the document needs, ask targeted clarifying questions, and wait for answers. This prevents Grok from silently filling gaps and producing downstream-inaccurate proposals and content.
-• Conversation 1-9 prompts all updated with the three fixes above.
-
 PLATFORM REQUIREMENT: SuperGrok Heavy subscription ($300/month) is required for native document generation (PDF, PPTX, XLSX). Standard SuperGrok ($30/month) will display Grok 4.3 in the model selector but cannot activate it. DOCX generation is not confirmed on Grok 4.3 — this Guide assumes PDF as the default editable output where the original Claude Guide specified DOCX, and notes where this matters.
 
 TABLELAND COPILOT - COMPLETE IMPLEMENTATION GUIDE (GROK EDITION)
