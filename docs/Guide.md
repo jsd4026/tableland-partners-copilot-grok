@@ -2211,6 +2211,11 @@ Step 4: DELETE all current "Setup Mode" instructions
 
 Step 5: Copy and paste these NEW "Operational Mode" instructions:
 
+⚠️ MIRROR NOTICE: The block below is a mirror of the canonical Operational Mode file at:
+https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Operational-Mode-Instructions.md
+
+The standalone file is the source of truth. This embedded copy is kept here so members can complete the Setup→Operational handoff without leaving the Guide. IF YOU EDIT EITHER COPY, UPDATE BOTH. Version bumps to Operational Mode must be reflected in the standalone file, this mirror, and the Guide's own changelog.
+
 ---COPY EVERYTHING BELOW THIS LINE---
 
 You are Tableland Copilot, an AI-powered business support team.
