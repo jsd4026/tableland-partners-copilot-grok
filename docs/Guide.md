@@ -1,6 +1,12 @@
-TABLELAND COPILOT GUIDE — VERSION 7.4-GROK
+TABLELAND COPILOT GUIDE — VERSION 7.5-GROK
 
-Last Updated 2026-04-23 (revision d) | This is the Grok-native fork of the Tableland Copilot Guide, designed for Grok 4.3 and newer on SuperGrok Heavy. Parallel version 6.4 exists for Claude; this file replaces all Claude-specific references with Grok equivalents.
+Last Updated 2026-04-23 (revision e) | This is the Grok-native fork of the Tableland Copilot Guide, designed for Grok 4.3 and newer on SuperGrok Heavy. Parallel version 6.4 exists for Claude; this file replaces all Claude-specific references with Grok equivalents.
+
+CHANGELOG v7.4 → v7.5 (revision e):
+• Added cache-buster requirement to the Guide Retrieval Protocol URL in both Setup and Ops Mode mirrors: `?t=[current-unix-timestamp]`. GitHub's CDN was returning stale cached Guide versions (e.g., Grok reading v7.2 when live was v7.4). The cache-buster was already documented for Model Currency / Chat Continuity refresh checks — this extends it to the initial Guide fetch, which is where the staleness actually affected member experience.
+• Setup Mode mirror re-synced to standalone file v1.3.
+• Ops Mode mirror re-synced to standalone file v1.5.
+
 
 PLATFORM REQUIREMENT: SuperGrok Heavy subscription ($300/month) is required for native document generation (PDF, PPTX, XLSX). Standard SuperGrok ($30/month) will display Grok 4.3 in the model selector but cannot activate it. DOCX generation is not confirmed on Grok 4.3 — this Guide assumes PDF as the default editable output where the original Claude Guide specified DOCX, and notes where this matters.
 
@@ -95,7 +101,7 @@ PROJECT INSTRUCTIONS - SETUP MODE:
 ⚠️ MIRROR NOTICE: The block below is a mirror of the canonical Setup Mode file at:
 https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Setup-Mode-Instructions.md
 
-THE STANDALONE FILE IS THE SOURCE OF TRUTH. If you edit Setup-Mode-Instructions.md, you MUST re-sync this mirror in the same release. Version bumps to Setup Mode must be reflected in the standalone file, this mirror, and the Guide's own changelog. Do not edit only one copy.
+THE STANDALONE FILE IS THE SOURCE OF TRUTH. If you edit Setup-Mode-Instructions.md, you MUST re-sync this mirror in the same release. Do not edit only one copy.
 
 ---BEGIN MIRRORED CONTENT---
 
@@ -110,7 +116,8 @@ GUIDE RETRIEVAL PROTOCOL (CRITICAL — DO THIS FIRST IN EVERY NEW CONVERSATION)
 
 At the START of every new conversation, BEFORE anything else:
 
-1. Use web browsing to retrieve: https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Guide.md
+1. Use web browsing to retrieve: https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Guide.md?t=[current-unix-timestamp]
+   CRITICAL: Always append `?t=[current-unix-timestamp]` (or any random string) on EVERY fetch to bypass CDN cache. Without this, GitHub's CDN may return a stale cached version instead of the live file.
 2. Check the VERSION number at the top.
 3. Compare to any "Guide.md" or "Complete_Implementation_Guide" attached to this Project.
 4. DECISION:
@@ -274,7 +281,7 @@ Provide these steps:
 3. Paste Operational Mode Instructions v1.1 (from the Guide, or from https://github.com/jsd4026/tableland-partners-copilot-grok/blob/main/docs/Operational-Mode-Instructions.md) and save
 4. Start a new conversation from the Project's main screen
 
-END OF SETUP MODE INSTRUCTIONS (GROK v1.2)
+END OF SETUP MODE INSTRUCTIONS (GROK v1.3)
 
 © 2026 Tableland Partners, LLC
 
@@ -2196,7 +2203,7 @@ Step 5: Copy and paste these NEW "Operational Mode" instructions:
 ⚠️ MIRROR NOTICE: The block below is a mirror of the canonical Operational Mode file at:
 https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Operational-Mode-Instructions.md
 
-THE STANDALONE FILE IS THE SOURCE OF TRUTH. If you edit Operational-Mode-Instructions.md, you MUST re-sync this mirror in the same release. Version bumps to Operational Mode must be reflected in the standalone file, this mirror, and the Guide's own changelog. Do not edit only one copy.
+THE STANDALONE FILE IS THE SOURCE OF TRUTH. If you edit Operational-Mode-Instructions.md, you MUST re-sync this mirror in the same release. Do not edit only one copy.
 
 ---COPY EVERYTHING BELOW THIS LINE---
 
@@ -2207,7 +2214,8 @@ CURRENT MODE: OPERATIONAL MODE
 
 At the START of every new conversation, BEFORE anything else:
 
-1. Web browse: https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Guide.md
+1. Web browse: https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Guide.md?t=[current-unix-timestamp]
+   CRITICAL: Always append `?t=[current-unix-timestamp]` (or any random string) on EVERY fetch to bypass CDN cache. Without this, GitHub's CDN may return a stale cached version.
 2. Check the VERSION at the top.
 3. Compare to any "Guide.md" or "Complete_Implementation_Guide" attached to this Project.
 4. DECISION:
