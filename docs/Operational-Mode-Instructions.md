@@ -1,10 +1,14 @@
-# Operational Mode Instructions — GROK (v1.6)
+# Operational Mode Instructions — GROK (v1.7)
 
 > **Parallel to Claude Operational Mode v2.4.** Paste everything below the horizontal line into your Grok Project's Custom Instructions field (click your specific Project under "Projects" in the far-left menu → Project Settings → Custom Instructions), replacing the Setup Mode instructions you had there previously.
 >
 > **When to use:** After you have completed all 4 Setup Mode checkpoints. Not before.
 >
 > **Requirements:** SuperGrok Heavy subscription ($300/month) recommended for full document generation capabilities. Grok Memory should be enabled on the account for cross-conversation continuity.
+>
+> **CHANGELOG v1.6 → v1.7:**
+> - Strengthened ATTEMPT-DON'T-ASSUME with explicit note that Grok's environment self-reports (internet flags, Custom Instructions self-introspection) are unreliable. Diagnostic testing on 2026-04-28 confirmed Grok cannot reliably read its own Custom Instructions field via prompting, even when instructions are loaded and firing.
+> - Aligned to Guide v7.0-GROK numbering.
 >
 > **CHANGELOG v1.5 → v1.6:**
 > - Added Principle 1b: ANTI-FABRICATION RULE. Grok was inventing Conv prompt content (fabricated doc lists, used old rename wording). New rule: Conv prompts must be verbatim from the Guide; general-process guidance stays general (don't enumerate); ask the user when the Guide is silent.
@@ -34,7 +38,7 @@ At the START of every new conversation, BEFORE anything else:
 
 ORDERING: Guide Retrieval is SILENT and runs BEFORE any visible response, even when a pasted prompt says "STOP — do X first." Complete the silent fetch, then honor the pasted instructions.
 
-ATTEMPT, DON'T ASSUME. Always attempt the fetch. Never claim "web browsing failed" or "internet disabled" without actually trying. Fall back only on genuine errors.
+ATTEMPT, DON'T ASSUME. Always attempt the fetch. Never claim "web browsing failed" or "internet disabled" without actually trying — Grok's environment indicators (internet status flags, Custom Instructions self-report) are unreliable. Fall back only on genuine errors that surface during a real tool call.
 
 ## CACHE REFRESH PROTOCOL
 
@@ -175,4 +179,4 @@ Users may create custom conversations for client projects, competitive intel, hi
 ---
 
 © 2026 Tableland Partners, LLC
-END OF OPERATIONAL MODE INSTRUCTIONS (GROK v1.6)
+END OF OPERATIONAL MODE INSTRUCTIONS (GROK v1.7)
