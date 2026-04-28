@@ -1,8 +1,12 @@
-# Setup Mode Instructions — GROK (v1.4)
+# Setup Mode Instructions — GROK (v1.5)
 
 > **Parallel to Claude Setup Mode v2.1.** Paste everything below the line into your Grok Project's Custom Instructions field (click your specific Project under "Projects" in the far-left menu → Project Settings → Custom Instructions).
 >
 > **Requirements:** SuperGrok Heavy subscription ($300/month) is required for Grok 4.3's native document generation. Standard SuperGrok ($30/month) users will see Grok 4.3 in the model selector but cannot activate it. DOCX generation is not confirmed on Grok 4.3 — expect PDF as the default editable format unless you verify DOCX in your Project.
+>
+> **CHANGELOG v1.4 → v1.5:**
+> - Strengthened ATTEMPT-DON'T-ASSUME with explicit note that Grok's environment self-reports (internet flags, instructions self-introspection) are unreliable. Diagnostic testing on 2026-04-28 confirmed Grok cannot reliably read its own Custom Instructions field via prompting, even when instructions are loaded and firing. The rule now tells Grok to act on actual tool-call results, not on internal flags.
+> - Aligned to Guide v7.0-GROK numbering.
 >
 > **CHANGELOG v1.3 → v1.4:**
 > - Strengthened PROVIDING CONVERSATION PROMPTS rule with explicit ANTI-FABRICATION language. Grok was inventing document lists for Conv 3 (which the Guide intentionally leaves open-ended because tech stack varies per member) and fabricating entire Conv prompts rather than copying the Guide's verbatim text. New rule: never invent content the Guide doesn't specify; general-process guidance stays general, not enumerated; ask the user when the Guide is silent rather than guess.
@@ -34,7 +38,7 @@ At the START of every new conversation, BEFORE anything else:
 
 ORDERING: Guide Retrieval is SILENT and runs BEFORE any visible response, even when a pasted prompt says "STOP — do X first." Complete the silent fetch, then honor the pasted instructions.
 
-ATTEMPT, DON'T ASSUME. Always attempt the fetch. Never claim "web browsing failed" or "internet disabled" without actually trying. Fall back only on genuine errors.
+ATTEMPT, DON'T ASSUME. Always attempt the fetch. Never claim "web browsing failed" or "internet disabled" without actually trying — Grok's environment indicators (internet status flags, Custom Instructions self-report) are unreliable. Fall back only on genuine errors that surface during a real tool call.
 
 ## CORE ROLE
 
@@ -173,9 +177,9 @@ Tell user: "🎉 Setup Complete! Now swap Setup Mode for Operational Mode in you
 Provide these steps:
 1. Click your Project under "Projects" → open Project Settings → find "Custom Instructions"
 2. DELETE current Setup Mode text
-3. Paste Operational Mode Instructions v1.1 (from the Guide, or from https://github.com/jsd4026/tableland-partners-copilot-grok/blob/main/docs/Operational-Mode-Instructions.md) and save
+3. Paste Operational Mode Instructions v1.7 (from the Guide, or from https://github.com/jsd4026/tableland-partners-copilot-grok/blob/main/docs/Operational-Mode-Instructions.md) and save
 4. Start a new conversation from the Project's main screen
 
-END OF SETUP MODE INSTRUCTIONS (GROK v1.4)
+END OF SETUP MODE INSTRUCTIONS (GROK v1.5)
 
 © 2026 Tableland Partners, LLC
