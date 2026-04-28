@@ -1,6 +1,8 @@
-TABLELAND COPILOT GUIDE — VERSION 7.6-GROK
+TABLELAND COPILOT GUIDE — VERSION 7.7-GROK
 
-Last Updated 2026-04-23 (revision f) | This is the Grok-native fork of the Tableland Copilot Guide, designed for Grok 4.3 and newer on SuperGrok Heavy. Parallel version 6.4 exists for Claude; this file replaces all Claude-specific references with Grok equivalents.
+Last Updated 2026-04-28 (revision g) | This is the Grok-native fork of the Tableland Copilot Guide, designed for Grok 4.3 and newer on SuperGrok Heavy. Parallel version 6.4 exists for Claude; this file replaces all Claude-specific references with Grok equivalents.
+
+CACHE-TEST-MARKER: ROUND2-CACHEBUSTER-2026-04-28
 
 CHANGELOG v7.5 → v7.6 (revision f):
 • Added ANTI-FABRICATION rules to Setup Mode (strengthened PROVIDING CONVERSATION PROMPTS section) and Ops Mode (new Principle 1b). Grok was inventing Conv 3 document lists and fabricating entire Conv prompts rather than using the Guide's verbatim text. New rule: Conv prompts must be copied verbatim from Section 5; general-process guidance stays general (don't enumerate); ask the user when the Guide is silent.
