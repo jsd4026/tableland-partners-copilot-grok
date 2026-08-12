@@ -1,69 +1,135 @@
-# Tableland Copilot — Grok Edition
+# Tableland Copilot for Grok
 
-AI-powered business support system for small business owners, consultants, and entrepreneurs, implemented natively on Grok (xAI).
+Your AI-powered business assistant. It guides you step by step through building a complete business foundation, then runs alongside you for daily operations.
 
-This repo contains the Grok-native fork of the Tableland Copilot. The parallel Claude version lives at [jsd4026/tableland-partners-copilot](https://github.com/jsd4026/tableland-partners-copilot). Do not mix files between repos — each is tuned to its platform's capabilities and terminology.
+Built by [Tableland Partners](https://tablelandpartners.com) for AI Essentials Roundtable members.
+
+**Current release: v7.5-GROK (August 12, 2026)**
+
+> Running Claude instead? The Claude edition lives at [tableland-partners-copilot](https://github.com/jsd4026/tableland-partners-copilot). The two editions share version numbers and stay in sync.
+
+---
+
+## What It Does
+
+Ten conversations, each with a job. Four checkpoints keep you honest about progress.
+
+| # | Conversation | What it produces |
+|---|---|---|
+| 0 | Copilot Setup | Discovery. The Copilot learns your business |
+| 1 | Strategic Planning | 11 foundation documents (business model, financials, personas, brand, legal templates) |
+| 2 | Go-to-Market Strategy | 5 documents (GTM strategy, tech plan, campaign and social calendars) |
+| 3 | Technical Infrastructure | Verified setup guides for the tools you actually need |
+| 4 | Customer Experience | Onboarding playbook, proposal tracker, content standards |
+| 5 | Content Creation | Blogs, social, email, decks, plus full campaign atomization |
+| 6 | Proposals and Agreements | Custom proposals and SOWs from your own templates |
+| 7 | Prospecting | Qualified leads with verified contact info |
+| 8 | Receipt Capture | Expense tracking from receipt photos |
+| 9 | Field Support | Technical support agent for field employees |
+
+Setup takes 2 to 4 weeks at your own pace. Conversations 5 through 9 are ongoing tools you keep using afterward.
 
 ---
 
 ## Requirements
 
-- **SuperGrok Heavy subscription ($300/month)** — required for native document generation (PDF, PPTX, XLSX). Standard SuperGrok ($30/month) displays Grok 4.3 in the model selector but cannot activate it.
-- A Grok Project (the platform-level container Grok uses to group conversations and files; the UI labels these "Projects")
-- Access to the Tableland Copilot onboarding materials (provided by Jeffrey Daniels during setup)
+**Grok plan:** SuperGrok ($30/month) or X Premium+, running Grok 4.3 or newer. Document generation (PDFs, spreadsheets, slides) ships with Grok 4.3 on these tiers. SuperGrok Heavy also works and adds higher limits.
 
-## What's in this repo
+**Grok Memory:** turn it on. It lets the Copilot carry decisions across conversations without you repeating yourself.
 
-| File | Purpose | Who pastes it where |
-|------|---------|---------------------|
-| [`/docs/Guide.md`](./docs/Guide.md) | The full implementation guide. The source of truth for every conversation prompt, quality checkpoint, and document template. | Uploaded to the member's Grok Project Files during onboarding. Also fetched live by the Copilot at the start of every conversation. |
-| [`/docs/Setup-Mode-Instructions.md`](./docs/Setup-Mode-Instructions.md) | Custom Instructions for the Setup phase of a member's Grok Project. Drives the 4-checkpoint onboarding sequence. | Pasted into the Grok Project's Custom Instructions field during initial setup. |
-| [`/docs/Operational-Mode-Instructions.md`](./docs/Operational-Mode-Instructions.md) | Custom Instructions for daily operational use (after setup is complete). Replaces Setup Mode once Checkpoint 4 is met. | Pasted into the Grok Project's Custom Instructions field after Setup Mode is complete. |
+**A Grok Workspace.** Workspaces are Grok's project containers, each with its own files, custom instructions, and conversation history. Newer builds label them Workspaces; older ones say Projects. Same thing.
 
-## Member Quick-Start (first 10 minutes)
+---
 
-Follow in order:
+## Setup
 
-1. **Create a new Grok Project.** In the far-left menu, click "Projects" → "New Project". Name it: `[Your Business Name] - Tableland Copilot`.
+**Step 1. Create your Workspace.**
+Open Workspaces in the left sidebar at [grok.com](https://grok.com), create a new one, and name it `[Your Business Name] - Tableland Copilot`.
 
-2. **Upload the Guide.** Download [`Guide.md`](./docs/Guide.md) from this repo. In your new Project, open the Files tab and upload the file.
+**Step 2. Add the Setup Mode Instructions.**
+Open [`docs/Setup-Mode-Instructions.md`](docs/Setup-Mode-Instructions.md). Copy everything inside the gray box, then paste it into your workspace settings under Custom Instructions and save.
 
-3. **Paste Setup Mode into Custom Instructions.** Open [`Setup-Mode-Instructions.md`](./docs/Setup-Mode-Instructions.md), copy everything BELOW the horizontal line (the `---` divider near the top), and paste into your Project's Custom Instructions field. Save.
+**Step 3. Attach the Guide.**
+Download [`docs/Guide.md`](docs/Guide.md) and upload it to your workspace's Files tab. This is the backup copy. Your Copilot fetches the latest version from this repo automatically at the start of every conversation, so the attached file only gets used if that fetch fails.
 
-4. **Open your first conversation.** From the Project's main screen, click the text input field at the bottom and type: `Let's begin.`
+**Step 4. Start Conversation 0.**
+Open a new conversation in the workspace, then paste the prompt from [`docs/conversation-0-prompt.md`](docs/conversation-0-prompt.md). The Copilot will ask you to rename the conversation, then begin discovery.
 
-5. **Follow the Copilot's lead.** It will ask you to rename the conversation to `0: Copilot Setup`, confirm Grok Memory is on, then walk you through Discovery. From there, the Copilot tells you what to do at every step — rename conversations, create new ones, move between phases.
+That's it. From there the Copilot hands you each next prompt as you finish a phase.
 
-The Copilot hands you an explicit "paste this" prompt every time you need to create a new conversation (Conversations 1 through 9). You never have to hunt through the Guide — the Copilot extracts what you need.
+> **One gotcha worth knowing:** Grok applies custom instruction changes to new conversations only. If you edit them mid session, start a fresh conversation before judging the result.
 
-When you reach Checkpoint 4, the Copilot will tell you to swap Setup Mode out for [`Operational-Mode-Instructions.md`](./docs/Operational-Mode-Instructions.md) in your Custom Instructions. That transition marks the end of setup and the start of daily operational use.
+---
 
-## Raw URLs (for Grok's Guide Retrieval Protocol)
+## After Setup
 
-The Copilot fetches these URLs at the start of every conversation to check for updates:
+Once all 4 checkpoints are met, swap Setup Mode for Operational Mode. Copy the contents of [`docs/Operational-Mode-Instructions.md`](docs/Operational-Mode-Instructions.md) and replace your Setup Mode text in Custom Instructions.
 
-- Guide: `https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Guide.md`
-- Setup Mode: `https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Setup-Mode-Instructions.md`
-- Operational Mode: `https://raw.githubusercontent.com/jsd4026/tableland-partners-copilot-grok/main/docs/Operational-Mode-Instructions.md`
+The Copilot shifts from "build your business" to "run your business." Your execution conversations are ready for daily use.
 
-## Current versions
+---
 
-- Guide: **v7.1-GROK**
-- Setup Mode Instructions: **v1.1**
-- Operational Mode Instructions: **v1.1**
+## Repo Contents
 
-Every file has a version header at the top and a changelog. Bump the version number any time you edit — the Copilot uses the version string to decide whether to trust the uploaded copy or the web-fetched copy.
+| File | Version | Purpose |
+|---|---|---|
+| [`docs/Guide.md`](docs/Guide.md) | v7.5-GROK | The brain. Every prompt, phase, checkpoint, and standard |
+| [`docs/Setup-Mode-Instructions.md`](docs/Setup-Mode-Instructions.md) | v3.2-GROK | Custom Instructions for the build phase |
+| [`docs/Operational-Mode-Instructions.md`](docs/Operational-Mode-Instructions.md) | v3.3-GROK | Custom Instructions for daily operations |
+| [`docs/conversation-0-prompt.md`](docs/conversation-0-prompt.md) | v7.5-GROK | Your starting prompt |
 
-**Note on mirrors:** The Operational Mode Instructions file exists both as a standalone file (`/docs/Operational-Mode-Instructions.md`) and as a mirror embedded inside the Guide (at the Checkpoint 4 handoff). If you edit one, update the other. The standalone file is the source of truth.
+---
+
+## What Changed in v7.5-GROK
+
+- Aligned to the Claude edition's version numbering. Both platforms now ship v7.5 Guides together.
+- **Plan requirement dropped from $300/month to $30/month.** Document generation now ships with Grok 4.3 on standard tiers, so SuperGrok Heavy is no longer required.
+- **Renaming got less annoying.** Conversation 0 still waits for you to rename before continuing. Conversations 1 through 9 ask once, then get to work.
+- **Faster routine work.** A single quick output no longer triggers the full nine-step file workflow. That stays reserved for foundation and template documents.
+- Added the Chat Continuity Protocol. When a conversation fills up, the Copilot writes a context summary and names the follow-up conversation `5b`, `5c`, and so on, so your workspace stays organized.
+- Guide retrieval hardened with an authenticity check and date-based comparison.
+- Model update notifications now happen only when you ask.
+- Fixed several duplicated sections in the content atomization workflow.
+
+---
+
+## FAQ
+
+**Does the Copilot update automatically?**
+Yes, for the Guide. Your Custom Instructions tell the Copilot to fetch the latest Guide from this repo at the start of every conversation. When we publish improvements, you get them on your next new conversation.
+
+The two instruction files are different. Those live in your Custom Instructions field, so they only change when you paste in a new version. We email members when that happens.
+
+**Do I need a GitHub account?**
+No. Every link here opens in a browser and you copy from the page.
+
+**Grok down, or want a second opinion?**
+Say "Switch to Claude" in any conversation and the Copilot will point you to the Claude edition. A paid Claude plan is required.
+
+**Why does it keep asking me questions before writing a document?**
+By design. The Copilot asks 3 to 7 focused questions before drafting anything substantial, because documents built on assumptions are worse than documents built on facts. If you're in a hurry, say "just draft it" and it will proceed, flagging every assumption inline so you can correct them.
+
+**Can I fork this and modify it?**
+Roundtable members are welcome to adapt it for their own business. It is not licensed for resale or redistribution.
+
+**Something isn't working.**
+Say "I need Jeff's help" in any conversation. The Copilot will draft a support email with your context attached. Or email [jeff@tablelandpartners.com](mailto:jeff@tablelandpartners.com) directly.
+
+---
 
 ## Support
 
-Questions, bugs, or custom implementation help:
+**Jeffrey Daniels, Tableland Partners**
+[jeff@tablelandpartners.com](mailto:jeff@tablelandpartners.com)
 
-**Jeffrey Daniels — Tableland Partners**
-📧 jeff@tablelandpartners.com
-🌐 [tablelandpartners.com](https://tablelandpartners.com)
+Available for custom development, implementation support, and strategic consulting.
 
-## License
+- Tech Stack Setup
+- Custom Development
+- Strategic Consulting
+- Done-For-You Implementation
+- Fractional CMO
 
-© 2026 Tableland Partners, LLC. All rights reserved. Internal and member use only.
+---
+
+© 2026 Tableland Partners, LLC
