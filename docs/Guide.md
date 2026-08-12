@@ -1,6 +1,11 @@
 TABLELAND COPILOT GUIDE — VERSION 7.5-GROK (2026-08-12)
 
-Last Updated 2026-08-12 (revision b) | Grok-native fork of the Tableland Copilot Guide. Parallel version 7.5 exists for Claude. Minimum plan: SuperGrok ($30/month) or X Premium+, running Grok 4.3 or newer; SuperGrok Heavy also supported. Native document generation (PDF, spreadsheets, slides) ships with Grok 4.3 on standard tiers.
+Last Updated 2026-08-12 (revision c) | Grok-native fork of the Tableland Copilot Guide. Parallel version 7.5 exists for Claude. Minimum plan: SuperGrok ($30/month) or X Premium+, running Grok 4.3 or newer; SuperGrok Heavy also supported. Native document generation (PDF, spreadsheets, slides) ships with Grok 4.3 on standard tiers.
+
+CHANGELOG → v7.5-GROK (2026-08-12, revision c):
+• DISCOVERY SUMMARY BRIDGE (structural). Grok workspace conversations share files but cannot read each other's chat history, and Grok has no past-chats search, so Conversation 1 was starting blind. Conversation 0 now ends by generating Discovery_Summary.docx for upload to Workspace Files, and Conversation 1 opens by reading it. The Claude edition should adopt the same bridge rather than relying on past-chats search alone.
+• Non-blocking renames tightened to a SHORT FIRST REPLY: rename request plus the conversation's single opening check or question, then wait. Live testing showed the previous wording let the rename get buried under a wall of protocol questions.
+• New-conversation navigation corrected to the "+" button next to the workspace name (verified in live UI), with a fallback for builds without it.
 
 CHANGELOG → v7.5-GROK (2026-08-12, revision b):
 • Discovery Categories 2-6 written out in full. They had never existed: the Guide carried an authoring stub ("[Continue through all 6 categories...]") that left the AI to improvise every category after the first. Discovery inputs are now deterministic across members. The same stub exists in the Claude Guide and needs the same fix.
@@ -205,8 +210,8 @@ PROTOCOL:
    confirm you have the context, then we'll proceed with [next step
    from the summary]."
 
-7. NAMING STEPS for the user: "Create the new conversation from the
-   workspace's main screen, then rename it to exactly '[N][letter]:
+7. NAMING STEPS for the user: "Click the "+" next to the workspace name to start the new
+   conversation, then rename it to exactly '[N][letter]:
    [Purpose Name]' (hover the conversation in the left sidebar, click
    the ⋯ menu, choose Rename), paste the starter prompt, and the new
    session picks up where we left off."
@@ -500,9 +505,19 @@ question that matters downstream, ask one follow-up, then move on.
 
 WHEN DISCOVERY COMPLETE:
 
-Say: "Discovery Complete! Now let's create Conversation 1."
+1. Create Discovery_Summary.docx (PDF if DOCX is unavailable) containing
+the user's answers organized under the six category headings, plus a
+short Key Facts list (business name and legal form, model, revenue,
+targets, top customer profiles, constraints). Deliver via render_file,
+then run the full file workflow: download, review and correct, save,
+upload to Workspace Files, confirm. This file is how every later
+conversation knows the business; Grok conversations cannot read each
+other's chat history.
 
-Then provide Conversation 1 prompt from Section 4 using the 8-step
+2. After the user confirms the upload, say: "Discovery Complete! Now
+let's create Conversation 1."
+
+3. Provide the Conversation 1 prompt from Section 4 using the 8-step
 format.
 
 CONVERSATION 1 PROMPT
@@ -515,11 +530,11 @@ Now create Conversation 1: Strategic Planning & Business Foundation
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -527,15 +542,24 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 1: Strategic Planning & Business Foundation!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 1: Strategic Planning & Business Foundation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 1: Strategic Planning & Business Foundation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Create 11 foundation documents, working in order.
+
+FIRST: READ DISCOVERY. Before anything else, read Discovery_Summary.docx
+from Workspace Files; it holds the Conversation 0 answers (Grok
+conversations cannot see each other's history). Your opening item under
+the rename rule above: if the file is present, confirm in one line which
+business this is, then ask the Business_Model.docx question from CHECK
+FILES FIRST below. If it is missing, your opening item is instead to ask
+the user to upload Discovery_Summary.docx from Conversation 0, or paste
+their discovery answers.
 
 DISCOVERY GAP PROTOCOL (CRITICAL — APPLIES TO EVERY DOCUMENT):
 
@@ -639,11 +663,11 @@ Now create Conversation 2: Go-to-Market Strategy & Execution
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -651,19 +675,21 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 2: Go-to-Market Strategy & Execution!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 2: Go-to-Market Strategy & Execution. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 2: Go-to-Market Strategy & Execution. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Develop executable GTM strategy by creating 5 documents.
 
 DISCOVERY GAP PROTOCOL applies to every document in this conversation. Before drafting each doc: (1) summarize what you have from Workspace Files, (2) identify gaps that impact accuracy and downstream use, (3) ask 3-7 focused questions, (4) wait for answers, (5) restate key facts and ask for corrections, (6) only then draft. See full protocol in Conversation 1 prompt.
 
 Read from your Workspace files to read first:
+
+• Discovery_Summary.docx
 
 • Brand_Style_and_Messaging_Guide.docx
 
@@ -740,11 +766,11 @@ Now create Conversation 3: Technical Infrastructure & Automation
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -752,13 +778,13 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 3: Technical Infrastructure & Automation!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 3: Technical Infrastructure & Automation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 3: Technical Infrastructure & Automation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Help user select platforms and set them up.
 
@@ -796,11 +822,11 @@ Now create Conversation 4: Customer Experience
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -819,11 +845,11 @@ THEN - Create Conversation 4: Customer Experience
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -831,13 +857,13 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 4: Customer Experience!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 4: Customer Experience. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 4: Customer Experience. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Design customer journey and tracking.
 
@@ -921,11 +947,11 @@ FIRST - Create Conversation 5: Content Creation & Marketing Assets
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -933,13 +959,13 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 5: Content Creation & Marketing Assets!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 5: Content Creation & Marketing Assets. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 5: Content Creation & Marketing Assets. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Create marketing content based on user's needs.
 
@@ -1122,11 +1148,11 @@ SECOND - Create Conversation 6: Proposals and Agreements
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -1134,13 +1160,13 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 6: Proposals and Agreements!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 6: Proposals and Agreements. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 6: Proposals and Agreements. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Create custom proposals using templates.
 
@@ -1208,11 +1234,11 @@ THIRD - Create Conversation 7: Prospecting & Lead Generation
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -1220,13 +1246,13 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 7: Prospecting & Lead Generation!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 7: Prospecting & Lead Generation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 7: Prospecting & Lead Generation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Find qualified prospects with VERIFIED contact information,
 track them cumulatively, and prepare for HubSpot integration.
@@ -1525,11 +1551,11 @@ FOURTH - Create Conversation 8: Receipt Capture & Expense Tracking
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -1537,13 +1563,13 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 8: Receipt Capture & Expense Tracking!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 8: Receipt Capture & Expense Tracking. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 8: Receipt Capture & Expense Tracking. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Track business expenses by extracting receipt data, capturing
 business purpose, and UPDATING the existing Expense_Tracker.xlsx file.
@@ -1720,11 +1746,11 @@ FIFTH - Create Conversation 9: Field Support Agent
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, find your workspace: "[Your Business Name] - Tableland Copilot" (under Workspaces; older builds say Projects). Do NOT type into an existing conversation.
 
-**Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
+**Step 2: Click the "+" next to the workspace name. A NEW, empty conversation opens inside the workspace. (No "+" visible? Open the workspace and use the message field at the bottom of its main screen.)**
 
-**Step 3: Click the text input field so it's active.**
+**Step 3: Click the message field so it's active.**
 
 **Step 4: Copy this ENTIRE prompt below and paste it into that text field:**
 
@@ -1732,13 +1758,13 @@ Step 1: In the left sidebar, open Workspaces (older builds label this Projects) 
 
 Welcome to Conversation 9: Field Support Agent!
 
-⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING, SHORT FIRST REPLY) ⚠️
 
-After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
+After silent Guide Retrieval, your ENTIRE first reply is two items and nothing else: (1) the rename request below, (2) this conversation's single opening check or question from the instructions that follow. Hold every summary, protocol, and additional question until the user replies. Do not wait for the rename itself.
 
-"Quick housekeeping: please rename this conversation to 9: Field Support Agent. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
+Rename request: "Quick housekeeping: please rename this conversation to 9: Field Support Agent. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). No confirmation needed; rename anytime."
 
-Do not wait for confirmation. Proceed directly with:
+Then deliver the opening item and stop. The instructions below govern the work after the user replies:
 
 Your role: Technical support for field employees based on company's
 industry.
@@ -2087,7 +2113,8 @@ confirmation before any other visible action (Guide Retrieval still
 runs silently first).
 
 • Conversations 1-9: non-blocking request. The AI requests the rename,
-then proceeds in the same message. Members rename when convenient.
+delivers that conversation's single opening item, then waits. Members
+rename when convenient.
 
 This keeps the naming scaffold that teaches members to stay organized
 while removing friction once the pattern is learned.
