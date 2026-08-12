@@ -1,6 +1,14 @@
-TABLELAND COPILOT GUIDE — VERSION 7.0-GROK
+TABLELAND COPILOT GUIDE — VERSION 7.5-GROK (2026-08-12)
 
-Last Updated 2026-04-28 (revision a) | This is the Grok-native fork of the Tableland Copilot Guide, designed for Grok 4.3 and newer on SuperGrok Heavy. Parallel version 7.0 exists for Claude; this file mirrors the Claude Guide structure with Grok equivalents.
+Last Updated 2026-08-12 (revision a) | Grok-native fork of the Tableland Copilot Guide. Parallel version 7.5 exists for Claude. Minimum plan: SuperGrok ($30/month) or X Premium+, running Grok 4.3 or newer; SuperGrok Heavy also supported. Native document generation (PDF, spreadsheets, slides) ships with Grok 4.3 on standard tiers.
+
+CHANGELOG → v7.5-GROK (2026-08-12, revision a):
+• Aligned to Claude Guide v7.5. Added Section 3.5 Chat Continuity Protocol (Grok-adapted). Claude's Section 3.6 Cowork Logging is not ported (Cowork is a Claude-only product).
+• Platform minimum lowered from SuperGrok Heavy ($300/mo) to SuperGrok ($30/mo) or X Premium+. Document generation ships with Grok 4.3 and newer on standard tiers. Conversation 9 field-employee setup updated to match.
+• Conversations 1-9 rename requests are now non-blocking (ask, then proceed in the same message). Conversation 0 keeps the hard rename gate.
+• Atomization workflow defects fixed: duplicate STEP 5 renumbered, duplicate image spec consolidated into a single Image Completeness Rule.
+• Guide Retrieval hardened: authenticity guard (fetched content must begin with the exact Guide header) plus date-based comparison. Cache-buster retained (proven effective on Grok, April 2026 tests).
+• Terminology refreshed: Grok's containers are Workspaces in current builds (older builds said Projects). Verify labels in your UI on first session.
 
 CHANGELOG → v7.0-GROK (2026-04-28, revision a):
 • Renumbered Grok Guide to v7.0-GROK to match Claude Guide numbering. Going forward, Grok and Claude Guides share major version numbers (e.g., next release would be v7.1 / v7.1-GROK simultaneously). The "GROK" suffix preserves the fork distinction.
@@ -10,7 +18,7 @@ CHANGELOG → v7.0-GROK (2026-04-28, revision a):
 • Cache-buster on Guide Retrieval Protocol confirmed effective (verified 2026-04-28: bare URL returned stale 7.6, cache-buster URL returned live 7.7). Rule kept in both Setup and Ops Mode mirrors.
 • Strengthened ATTEMPT-DON'T-ASSUME in Setup v1.5 and Ops v1.7: Grok's environment self-reports (internet flags, Custom Instructions self-introspection) are unreliable. Diagnostic testing confirmed Grok cannot reliably read its own Custom Instructions field via prompting, even when instructions are loaded and firing.
 
-PLATFORM REQUIREMENT: SuperGrok Heavy subscription ($300/month) is required for native document generation (PDF, PPTX, XLSX). Standard SuperGrok ($30/month) will display Grok 4.3 in the model selector but cannot activate it. DOCX generation is not confirmed on Grok 4.3 — this Guide assumes PDF as the default editable output where the original Claude Guide specified DOCX, and notes where this matters.
+PLATFORM REQUIREMENT: SuperGrok ($30/month) or X Premium+ subscription, running Grok 4.3 or newer. Native document generation (PDF, spreadsheets, slides) ships with Grok 4.3 on these tiers; SuperGrok Heavy also works and adds higher limits and confirmed access to the newest flagship. If DOCX output is unavailable in a session, deliver PDF and say so.
 
 TABLELAND COPILOT - COMPLETE IMPLEMENTATION GUIDE (GROK EDITION)
 
@@ -27,6 +35,8 @@ PART 1: SETUP & OVERVIEW
 2. Project Setup Instructions
 
 3. "I Need Help" Support Feature
+
+3.5 Chat Continuity Protocol
 
 4. Content Writing Standards — AI Detection Resistance
 
@@ -101,7 +111,7 @@ daily operations.
 PROJECT INSTRUCTIONS - SETUP MODE:
 
 The full Setup Mode Instructions are maintained as a separate file. Members 
-receive these during onboarding and paste them into their Grok Project's 
+receive these during onboarding and paste them into their Grok Workspace's 
 "Custom Instructions" field.
 
 If a member needs a fresh copy:
@@ -114,9 +124,11 @@ ARCHITECTURE NOTE (v7.0+, for future maintainers):
 The current architecture uses an "attached-Guide-first" model with web 
 retrieval as a future-proofing mechanism:
 
-1. Each member has a Guide.md file attached to their Grok Project Files
+1. Each member has a Guide.md file attached to their Grok Workspace Files
 2. Custom Instructions tell the AI to web-fetch the live Guide first 
-   (with cache-buster), compare versions, and use whichever is newer
+   (with cache-buster), verify authenticity (content must begin with the
+   exact Guide header line), compare Last Updated dates, and use
+   whichever is newer
 3. If web fetch fails, fall back to the attached Guide
 4. AI uses whichever version is current
 
@@ -138,6 +150,68 @@ At ANY point in ANY conversation, say: "I need Jeff's help"
 
 AI will provide jeff@tablelandpartners.com, generate share link, and
 draft email.
+
+
+SECTION 3.5: CHAT CONTINUITY PROTOCOL (APPLIES TO ALL CONVERSATIONS)
+
+Governs what happens when a conversation approaches limits and must
+continue in a new one. Purpose is preserved by incrementing a letter
+suffix on the conversation name (5 → 5b → 5c), never by generic names.
+This protocol overrides any shorter continuity rule in Custom
+Instructions.
+
+TRIGGERS (act when any fire):
+• Chat feels slow, long, full, or "hitting limits"
+• Attachment/file upload limit reached
+• Roughly 50 user turns exceeded
+• User asks "should I start a new chat?" or similar
+• Natural phase completion in Setup Mode (end of a Checkpoint)
+
+PROTOCOL:
+
+1. IDENTIFY the source conversation from its FIRST user message
+   ("Welcome to Conversation N: [Purpose]!" or, for Conversation 0, the
+   rename instruction). Extract the NUMBER, current LETTER suffix (none,
+   b, c, ...), and the PURPOSE NAME exactly. If unclear, ask: "What's
+   this conversation named in the sidebar?" Don't guess.
+
+2. NEXT NAME: number and purpose stay identical; only the letter
+   increments (5 → 5b → 5c ... → 5z → 5aa).
+
+3. PAUSE and tell the user: "This conversation is approaching limits.
+   I'll preserve our work in a context summary, then we'll continue in
+   a new conversation named '[N][letter]: [Purpose Name]' so your
+   workspace stays organized."
+
+4. CONTEXT SUMMARY DOC: create Conv[N][letter]_Context_Summary_
+   [YYYY-MM-DD] as DOCX if available, else PDF. Contents: source
+   conversation name and purpose, key decisions, open items, documents
+   created or updated (filenames), immediate next steps, and the
+   starter prompt from step 6.
+
+5. DELIVER via render_file (render first, always). Tell the user:
+   "Download this and upload it to your Workspace Files before starting
+   the new conversation."
+
+6. STARTER PROMPT, in a triple-backtick code fence:
+   "Continuing the [Purpose Name] conversation from [N][previous]:
+   [Purpose Name] (which was full). The context summary is in Workspace
+   Files as Conv[N][letter]_Context_Summary_[YYYY-MM-DD]. Read it,
+   confirm you have the context, then we'll proceed with [next step
+   from the summary]."
+
+7. NAMING STEPS for the user: "Create the new conversation from the
+   workspace's main screen, then rename it to exactly '[N][letter]:
+   [Purpose Name]' (hover the conversation in the left sidebar, click
+   the ⋯ menu, choose Rename), paste the starter prompt, and the new
+   session picks up where we left off."
+
+8. HANDOFF ONLY: after this protocol fires, produce no new work in the
+   old conversation; finish the handoff cleanly.
+
+EDGE CASES: an existing [N]b already in the workspace → ask whether to
+use [N]c or delete the old one first. Custom conversations outside 0-9
+→ use the actual title from the sidebar; ask if unknown.
 
 
 SECTION 4: CONTENT WRITING STANDARDS — AI DETECTION RESISTANCE
@@ -327,7 +401,7 @@ FIRST: Check if Complete Implementation Guide is uploaded
 Ask: "Have you uploaded the Complete Implementation Guide to this
 Project's files?"
 • If NO → "Please download the Guide from this link, then upload it 
-  to your Project Files: 
+  to your Workspace Files: 
   https://github.com/jsd4026/tableland-partners-copilot-grok/blob/main/docs/Guide.md
   Once you've uploaded it, let me know."
 • If YES → "Great! Let's get started."
@@ -336,7 +410,7 @@ BEFORE DISCOVERY — PROJECT CONFIRMATION (do this once, takes 60 seconds):
 
 Say: "Before we start discovery, two quick confirmations so I can work effectively across our conversations:
 
-1. Confirm you are working inside a Grok Project (not the default Grok chat). Projects keep your files, custom instructions, and conversations organized in one container. If you're not in a Project yet, create one now: click "Projects" in the far-left menu → New Project → name it something like '[Your Business Name] — Tableland Copilot'.
+1. Confirm you are working inside a Grok Workspace (not the default Grok chat). Workspaces keep your files, custom instructions, and conversations organized in one container. If you're not in one yet, create it now: open Workspaces in the left sidebar (older builds say Projects) → New Workspace → name it '[Your Business Name] - Tableland Copilot'.
 2. Confirm Grok Memory is ON for this account. This lets me remember key decisions and preferences without you repeating them. It's in your Grok account settings.
 
 Confirm both? Type 'yes' to continue, or 'help' if you need a walkthrough."
@@ -379,7 +453,7 @@ Now create Conversation 1: Strategic Planning & Business Foundation
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -391,28 +465,13 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 1: Strategic Planning & Business Foundation!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 1: Strategic Planning & Business Foundation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 1: Strategic Planning & Business Foundation
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Create 11 foundation documents, working in order.
 
@@ -420,7 +479,7 @@ DISCOVERY GAP PROTOCOL (CRITICAL — APPLIES TO EVERY DOCUMENT):
 
 Before drafting ANY document in this conversation, do the following in order:
 
-1. Review what you already know from Conversation 0 and any uploaded Project Files. Briefly summarize it to the user (2-4 bullet points max).
+1. Review what you already know from Conversation 0 and any uploaded Workspace Files. Briefly summarize it to the user (2-4 bullet points max).
 
 2. Identify INFORMATION GAPS between what you have and what this specific document needs to be accurate AND support downstream use (future proposals, content, pricing, client-facing materials). Consider: numbers, named examples, pricing tiers, geographic scope, team size, target client profile, service mechanics, differentiators, risk tolerance, legal posture, voice/tone specifics.
 
@@ -458,7 +517,7 @@ After creating EVERY document, your very first response output MUST be the rende
 
 5. "Save the edited file"
 
-6. "Upload to Project Files: In the far-left menu click your specific Project under 'Projects' → Files tab → Upload → select the file"
+6. "Upload to Workspace Files: open your workspace from the left sidebar → Files tab → Upload → select the file"
 
 7. If replacing: "Delete old version first"
 
@@ -501,10 +560,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 1!
 
@@ -518,7 +577,7 @@ Now create Conversation 2: Go-to-Market Strategy & Execution
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -530,32 +589,17 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 2: Go-to-Market Strategy & Execution!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 2: Go-to-Market Strategy & Execution. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 2: Go-to-Market Strategy & Execution
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Develop executable GTM strategy by creating 5 documents.
 
-DISCOVERY GAP PROTOCOL applies to every document in this conversation. Before drafting each doc: (1) summarize what you have from Project Files, (2) identify gaps that impact accuracy and downstream use, (3) ask 3-7 focused questions, (4) wait for answers, (5) restate key facts and ask for corrections, (6) only then draft. See full protocol in Conversation 1 prompt.
+DISCOVERY GAP PROTOCOL applies to every document in this conversation. Before drafting each doc: (1) summarize what you have from Workspace Files, (2) identify gaps that impact accuracy and downstream use, (3) ask 3-7 focused questions, (4) wait for answers, (5) restate key facts and ask for corrections, (6) only then draft. See full protocol in Conversation 1 prompt.
 
 Read from your Workspace files to read first:
 
@@ -617,10 +661,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 2!
 
@@ -634,7 +678,7 @@ Now create Conversation 3: Technical Infrastructure & Automation
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -646,28 +690,13 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 3: Technical Infrastructure & Automation!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 3: Technical Infrastructure & Automation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 3: Technical Infrastructure & Automation
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Help user select platforms and set them up.
 
@@ -705,7 +734,7 @@ Now create Conversation 4: Customer Experience
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -717,10 +746,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 3!
 
@@ -728,7 +757,7 @@ THEN - Create Conversation 4: Customer Experience
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -740,28 +769,13 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 4: Customer Experience!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 4: Customer Experience. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 4: Customer Experience
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Design customer journey and tracking.
 
@@ -794,10 +808,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 4!
 
@@ -845,7 +859,7 @@ FIRST - Create Conversation 5: Content Creation & Marketing Assets
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -857,28 +871,13 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 5: Content Creation & Marketing Assets!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 5: Content Creation & Marketing Assets. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 5: Content Creation & Marketing Assets
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Create marketing content based on user's needs.
 
@@ -980,7 +979,7 @@ ALLOWED ASPECT RATIOS (match to channel requirement):
 • 3:2 (1620x1080) — blog hero, case study
 • 2:3 (1080x1620) — Pinterest, editorial
 
-STEP 5: APPLY ANTI-AI-DETECTION RULES (Section 4 of this Guide)
+STEP 6: APPLY ANTI-AI-DETECTION RULES (Section 4 of this Guide)
 • Every output: fewer than 50% net-new AI sentences; at least half built from source inventory.
 • Banned words list enforced.
 • No em dashes.
@@ -989,32 +988,7 @@ STEP 5: APPLY ANTI-AI-DETECTION RULES (Section 4 of this Guide)
 • Start with the point.
 • Post-draft: 3-5 arbitrary edits per paragraph.
 
-STEP 6: IMAGE GUIDANCE — MANDATORY FOR EVERY VISUAL OUTPUT
-
-This step is REQUIRED, not optional. Every output that includes a visual component (blog hero image, LinkedIn carousel slide, email header, social post image, video thumbnail, short-form video scene) must have BOTH Option A AND Option B delivered in-line within the relevant channel's section of the campaign .docx. No exceptions.
-
-OPTION A — AI IMAGE PROMPT (for Nano Banana / Grok Imagine / Veo3), include all:
-• Subject / scene description (specific, not generic)
-• Composition (framing, focal point, camera angle)
-• Style / mood (e.g., documentary photography, flat illustration, cinematic)
-• Color palette (pull from Brand_Style_and_Messaging_Guide.docx where applicable)
-• Aspect ratio and pixel dimensions (see allowed list below)
-• On-image text content with exact wording (or "none" if text-free)
-• Negative prompt (what to avoid)
-
-OPTION B — FREE STOCK SEARCH URLS, provide 3 keyword variations per platform:
-• Unsplash: https://unsplash.com/s/photos/[keywords-with-dashes]
-• Pexels: https://www.pexels.com/search/[keywords%20url-encoded]/
-• Pixabay: https://pixabay.com/images/search/[keywords%20url-encoded]/
-
-ALLOWED ASPECT RATIOS (match to channel requirement):
-• 1:1 (1080x1080) — Instagram feed, LinkedIn feed image
-• 16:9 (1920x1080) — blog header, YouTube thumbnail, LinkedIn article
-• 9:16 (1080x1920) — Instagram Story/Reel, TikTok, YouTube Short
-• 3:2 (1620x1080) — blog hero, case study
-• 2:3 (1080x1620) — Pinterest, editorial
-
-If a channel has no visual component (pure-text LinkedIn post, prospecting email body), explicitly note "Text-only — no image needed" in the .docx so the member sees the decision was intentional.
+IMAGE COMPLETENESS RULE (MANDATORY): every image channel's section must contain the full Option A + Option B block per the IMAGE ASSETS FORMAT in Step 5. Channels with no visual component state "Text-only — no image needed" so the member sees the decision was intentional. No exceptions.
 
 STEP 7: PRE-DELIVERY AUDIT — HARD STOP BEFORE DELIVERY
 
@@ -1075,10 +1049,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 5!
 
@@ -1086,7 +1060,7 @@ SECOND - Create Conversation 6: Proposals and Agreements
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -1098,28 +1072,13 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 6: Proposals and Agreements!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 6: Proposals and Agreements. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 6: Proposals and Agreements
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Create custom proposals using templates.
 
@@ -1176,10 +1135,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 6!
 
@@ -1187,7 +1146,7 @@ THIRD - Create Conversation 7: Prospecting & Lead Generation
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -1199,28 +1158,13 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 7: Prospecting & Lead Generation!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 7: Prospecting & Lead Generation. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 7: Prospecting & Lead Generation
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Find qualified prospects with VERIFIED contact information,
 track them cumulatively, and prepare for HubSpot integration.
@@ -1508,10 +1452,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 7!
 
@@ -1519,7 +1463,7 @@ FOURTH - Create Conversation 8: Receipt Capture & Expense Tracking
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -1531,28 +1475,13 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 8: Receipt Capture & Expense Tracking!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 8: Receipt Capture & Expense Tracking. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 8: Receipt Capture & Expense Tracking
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Track business expenses by extracting receipt data, capturing
 business purpose, and UPDATING the existing Expense_Tracker.xlsx file.
@@ -1718,10 +1647,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 8!
 
@@ -1729,7 +1658,7 @@ FIFTH - Create Conversation 9: Field Support Agent
 
 STEP-BY-STEP INSTRUCTIONS:
 
-Step 1: In the far-left menu under "Projects," click your specific Project: "[Your Business Name] - Tableland Copilot". This returns you to the Project's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
+Step 1: In the left sidebar, open Workspaces (older builds label this Projects) and click your workspace: "[Your Business Name] - Tableland Copilot". This returns you to the workspace's main screen. (Do NOT click inside an existing conversation — you need the Project's main view.)
 
 **Step 2: On the Project's main screen you'll see a text input field at the bottom (the same field you use to start any new conversation inside this Project). This will create a NEW conversation.**
 
@@ -1741,28 +1670,13 @@ Step 1: In the far-left menu under "Projects," click your specific Project: "[Yo
 
 Welcome to Conversation 9: Field Support Agent!
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+⚠️ RENAME REQUEST (NON-BLOCKING) ⚠️
 
-Before any other visible action (Guide Retrieval runs silently first), ask the user to rename this conversation:
+After silent Guide Retrieval, open your first reply with this rename request, then continue the work in the same message:
 
-Say EXACTLY this:
+"Quick housekeeping: please rename this conversation to 9: Field Support Agent. Hover over this conversation in the left sidebar, click the ⋯ menu, and choose Rename (on mobile: tap and hold). Reply 'renamed' when done, or just keep going and rename anytime."
 
-"Before we begin, please rename this conversation so you can find it
-later:
-
-1. In the left sidebar under "Conversations," locate the conversation you're CURRENTLY IN (it will be highlighted).
-
-2. Hover over its row. A three-dot menu (⋯) will appear on the right side of the row. Click it and select "Rename." (On mobile: tap-and-hold the row, then select Rename.)
-
-3. Rename it to exactly: 9: Field Support Agent
-
-Have you renamed it? Please type 'yes' to confirm."
-
-DO NOT proceed with any other visible tasks until the user confirms they've renamed the conversation. (Guide Retrieval Protocol still runs silently first.)
-
-Wait for their confirmation.
-
-AFTER USER CONFIRMS RENAME, THEN proceed with:
+Do not wait for confirmation. Proceed directly with:
 
 Your role: Technical support for field employees based on company's
 industry.
@@ -1805,13 +1719,13 @@ STEP 1: CREATE GROK ACCOUNT
 
 4. Verify your email
 
-5. Subscribe to SuperGrok Heavy ($300/month) — required for native document generation. A free or standard SuperGrok plan will not produce the PDFs, spreadsheets, or decks this agent relies on.
+5. Subscribe to SuperGrok ($30/month) or X Premium+ — Grok 4.3 and newer include native document generation (PDFs, spreadsheets, decks). SuperGrok Heavy also works if your company already uses it.
 
 STEP 2: CREATE YOUR FIELD SUPPORT PROJECT
 
-1. After logging in, click "Projects" in the far-left sidebar
+1. After logging in, open Workspaces in the left sidebar (older builds say Projects)
 
-2. Click "New Project"
+2. Click "New Workspace" (or "New Project" in older builds)
 
 3. Name it: "[Company Name] - Field Support Agent"
 
@@ -2002,10 +1916,10 @@ Step 5: Press Enter to send the prompt
 
 Step 6: Wait for the AI to respond
 
-**Step 7: The AI will ask you to rename the conversation - follow its
-instructions**
+**Step 7: The AI will suggest renaming the conversation - do it whenever
+convenient**
 
-Step 8: After renaming, confirm with the AI to proceed
+Step 8: The AI proceeds right away; no confirmation needed
 
 You're now in Conversation 9!
 
@@ -2017,9 +1931,9 @@ Let me verify you've completed setup:
 
 • Conversations 0-9 all created and renamed
 
-• All foundation documents (11) uploaded to Project Files
+• All foundation documents (11) uploaded to Workspace Files
 
-• GTM documents (5) uploaded to Project Files
+• GTM documents (5) uploaded to Workspace Files
 
 • Tech stack configured
 
@@ -2056,17 +1970,18 @@ Click anywhere inside the gray box, then:
 
 This copies all the instructions.
 
-STEP 3: Paste them into your Grok Project
+STEP 3: Paste them into your Grok Workspace
 
-1. Go to your Grok Project (in the far-left "Projects" menu)
-2. Open Project Settings → Custom Instructions
+1. Open your workspace from the left sidebar (Workspaces; older builds say Projects)
+2. Open the workspace settings → Custom Instructions
 3. DELETE everything currently in that field
 4. PASTE what you copied (Ctrl+V on Windows, Cmd+V on Mac)
 5. Click "Save"
 
 STEP 4: Test it
 
-Start a new conversation in your Project and type:
+Start a NEW conversation in your workspace (instruction changes apply
+to new conversations only) and type:
 "What mode are you in?"
 
 The Copilot should reply: "I'm in Operational Mode"
@@ -2101,19 +2016,16 @@ END OF COMPLETE IMPLEMENTATION GUIDE
 
 © 2026 Tableland Partners, LLC
 
-Upload this document to user's Grok Project Files during onboarding.
+Upload this document to user's Grok Workspace Files during onboarding.
 
-All conversation prompts now use impossible-to-skip format:
+Conversation naming uses a two-tier gate:
 
-⚠️ RENAME BEFORE CONTENT ⚠️
+• Conversation 0: hard gate. The AI requests the rename and waits for
+confirmation before any other visible action (Guide Retrieval still
+runs silently first).
 
-"Say EXACTLY this:" [quoted text]
+• Conversations 1-9: non-blocking request. The AI requests the rename,
+then proceeds in the same message. Members rename when convenient.
 
-"DO NOT proceed until confirmed"
-
-"Wait for their confirmation"
-
-"AFTER USER CONFIRMS RENAME, THEN proceed"
-
-This format ensures AI ALWAYS asks for rename before doing anything
-else.
+This keeps the naming scaffold that teaches members to stay organized
+while removing friction once the pattern is learned.
