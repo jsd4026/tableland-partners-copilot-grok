@@ -1,6 +1,11 @@
 TABLELAND COPILOT GUIDE — VERSION 7.5-GROK (2026-08-12)
 
-Last Updated 2026-08-12 (revision c) | Grok-native fork of the Tableland Copilot Guide. Parallel version 7.5 exists for Claude. Minimum plan: SuperGrok ($30/month) or X Premium+, running Grok 4.3 or newer; SuperGrok Heavy also supported. Native document generation (PDF, spreadsheets, slides) ships with Grok 4.3 on standard tiers.
+Last Updated 2026-08-12 (revision d) | Grok-native fork of the Tableland Copilot Guide. Parallel version 7.5 exists for Claude. Minimum plan: SuperGrok ($30/month) or X Premium+, running Grok 4.3 or newer; SuperGrok Heavy also supported. Native document generation (PDF, spreadsheets, slides) ships with Grok 4.3 on standard tiers.
+
+CHANGELOG → v7.5-GROK (2026-08-12, revision d):
+• EVIDENCE-BASED ASSET CHECK. Live testing showed the AI asking "Do you already have GTM_Strategy.docx?" while simultaneously referencing that file in Workspace Files. Rule hardened: look in Workspace Files BEFORE asking; never ask whether a document exists when it is visible; use the found / not-found scripts and wait at that fork.
+• NET-NEW QUESTIONS ONLY. Discovery Gap questions must never re-ask anything Discovery_Summary.docx or Workspace Files already answer; known facts go into the restate step for confirmation instead. Live testing showed channel mix and weekly hours being re-asked after discovery had answered both.
+• DATE TIE-BREAKER on Guide retrieval: when the web and attached Guides carry the same Last Updated date, use the WEB version. Same-day revisions (a, b, c, d) made equal dates a real case.
 
 CHANGELOG → v7.5-GROK (2026-08-12, revision c):
 • DISCOVERY SUMMARY BRIDGE (structural). Grok workspace conversations share files but cannot read each other's chat history, and Grok has no past-chats search, so Conversation 1 was starting blind. Conversation 0 now ends by generating Discovery_Summary.docx for upload to Workspace Files, and Conversation 1 opens by reading it. The Claude edition should adopt the same bridge rather than relying on past-chats search alone.
@@ -138,7 +143,7 @@ retrieval as a future-proofing mechanism:
 2. Custom Instructions tell the AI to web-fetch the live Guide first 
    (with cache-buster), verify authenticity (content must begin with the
    exact Guide header line), compare Last Updated dates, and use
-   whichever is newer
+   whichever is newer (equal dates: web wins)
 3. If web fetch fails, fall back to the attached Guide
 4. AI uses whichever version is current
 
@@ -571,6 +576,8 @@ Before drafting ANY document in this conversation, do the following in order:
 
 3. Ask 3-7 FOCUSED clarifying questions to fill those gaps. Use concrete questions, not open-ended ones. Bad: "Tell me about your business." Good: "What are the three most common project sizes (in dollars) you've delivered in the past 12 months?"
 
+NET-NEW ONLY: never re-ask anything Discovery_Summary.docx or Workspace Files already answer. Fold those known facts into your step-1 summary and confirm them at step 5 instead of asking again.
+
 4. WAIT for the user's answers. Do not draft while waiting. Do not fill gaps with assumptions or generic placeholders.
 
 5. After the user answers, restate the key facts you'll use and ask: "Any corrections or additions before I draft?" Then draft.
@@ -581,13 +588,16 @@ DO NOT silently infer gaps from Conversation 0 alone. Setup discovery covered hi
 
 CHECK FILES FIRST:
 
-Before creating ANY document, read from your Workspace files to check
-/mnt/user-data/outputs/ and Workspace Files.
+Before creating ANY document, LOOK in Workspace Files. Never ask
+whether a document exists when you can see it; ask the branch that
+matches the evidence, then WAIT at this fork (no summaries, no
+questions) until the user answers.
 
-If found: "I found [Document]. Use this or create new?"
+If found: "I found [Document] in your Workspace Files. Build on it, or
+start fresh?"
 
-If not found: "Don't see [Document]. Have one to upload first, or
-create new?"
+If not found: "Don't see [Document] in Workspace Files. Have one to
+upload first, or should I create it?"
 
 COMPLETE FILE WORKFLOW (RENDER-FIRST — ENFORCED):
 
@@ -685,7 +695,7 @@ Then deliver the opening item and stop. The instructions below govern the work a
 
 Your role: Develop executable GTM strategy by creating 5 documents.
 
-DISCOVERY GAP PROTOCOL applies to every document in this conversation. Before drafting each doc: (1) summarize what you have from Workspace Files, (2) identify gaps that impact accuracy and downstream use, (3) ask 3-7 focused questions, (4) wait for answers, (5) restate key facts and ask for corrections, (6) only then draft. See full protocol in Conversation 1 prompt.
+DISCOVERY GAP PROTOCOL applies to every document in this conversation. Before drafting each doc: (1) run CHECK FILES FIRST exactly as defined in the Conversation 1 prompt: look in Workspace Files, never ask whether a document exists when you can see it, deliver the matching found / not-found question, and WAIT at that fork; (2) after the user answers, summarize what you have from Workspace Files, (3) identify gaps, (4) ask 3-7 focused NET-NEW questions (never re-ask what Discovery_Summary.docx or Workspace Files already answer; confirm those facts at the restate step instead), (5) wait for answers, (6) restate key facts and ask for corrections, (7) only then draft. Full protocol in Conversation 1 prompt.
 
 Read from your Workspace files to read first:
 
