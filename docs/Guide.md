@@ -316,8 +316,12 @@ run this checklist in order:
   Step 1: "Create or refresh this conversation's share link: click the
   share control under my latest response, NOT the project share at top
   right, and paste the URL. Say 'skip' to record none."
-  Step 2: Write the ENTIRE ledger directly to Workspace Files,
-  overwriting the prior copy. Never write fragments.
+  Step 2: Read the existing Workspace_Ledger.md in full FIRST, then
+  write the ENTIRE ledger directly to Workspace Files, carrying forward
+  every prior section (decisions log, conversation index with its share
+  links, active state). Never write fragments, and never write a fresh
+  ledger over an existing one. If a ledger should exist but cannot be
+  read, do not overwrite: report the problem and ask.
 You initiate this checklist; the user is never expected to remember it.
 Nothing happens at conversation creation; a conversation enters the
 index at its first closeout.
