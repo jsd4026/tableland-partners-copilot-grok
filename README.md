@@ -4,7 +4,7 @@ Your AI-powered business assistant. It guides you step by step through building 
 
 Built by [Tableland Partners](https://tablelandpartners.com) for AI Essentials Roundtable members.
 
-**Current release: v7.5-GROK, revision d (August 12, 2026)**
+**Current release: v7.5-GROK, revision e (August 19, 2026)**
 
 > Running Claude instead? The Claude edition lives at [tableland-partners-copilot](https://github.com/jsd4026/tableland-partners-copilot). The two editions share version numbers and stay in sync.
 
@@ -25,7 +25,7 @@ Ten conversations, each with a job. Four checkpoints keep you honest about progr
 | 6 | Proposals and Agreements | Custom proposals and SOWs from your own templates |
 | 7 | Prospecting | Qualified leads with verified contact info |
 | 8 | Receipt Capture | Expense tracking from receipt photos |
-| 9 | Field Support | Technical support agent for field employees |
+| 9 | Operational Support | Troubleshooting for the technical work you actually do |
 
 Setup takes 2 to 4 weeks at your own pace. Conversations 5 through 9 are ongoing tools you keep using afterward.
 
@@ -73,15 +73,18 @@ The Copilot shifts from "build your business" to "run your business." Your execu
 
 | File | Version | Purpose |
 |---|---|---|
-| [`docs/Guide.md`](docs/Guide.md) | v7.5-GROK rev d | The brain. Every prompt, phase, checkpoint, and standard |
-| [`docs/Setup-Mode-Instructions.md`](docs/Setup-Mode-Instructions.md) | v3.2-GROK rev c | Custom Instructions for the build phase |
-| [`docs/Operational-Mode-Instructions.md`](docs/Operational-Mode-Instructions.md) | v3.3-GROK rev b | Custom Instructions for daily operations |
+| [`docs/Guide.md`](docs/Guide.md) | v7.5-GROK rev e | The brain. Every prompt, phase, checkpoint, and standard |
+| [`docs/Setup-Mode-Instructions.md`](docs/Setup-Mode-Instructions.md) | v3.2-GROK rev d | Custom Instructions for the build phase |
+| [`docs/Operational-Mode-Instructions.md`](docs/Operational-Mode-Instructions.md) | v3.3-GROK rev c | Custom Instructions for daily operations |
 | [`docs/conversation-0-prompt.md`](docs/conversation-0-prompt.md) | v7.5-GROK rev c | Your starting prompt |
 
 ---
 
 ## What Changed in v7.5-GROK
 
+- **Your conversations now share a memory.** A single Workspace_Ledger file records decisions, open items, and an index of every conversation, and the Copilot reads it at the start of each new chat and updates it at the end. It writes the file itself, so there is nothing to download or re-upload.
+- **Chats can read each other.** Record a conversation's share link in the ledger (the share control under an individual reply, not the project share at top right) and any other conversation can pull the actual transcript when it needs detail.
+- **Conversation 9 became Operational Support.** It now adapts: field-employee troubleshooting if you have field staff, otherwise troubleshooting for the technical work you actually do.
 - Aligned to the Claude edition's version numbering. Both platforms now ship v7.5 Guides together.
 - **Plan requirement dropped from $300/month to $30/month.** Document generation now ships with Grok 4.3 on standard tiers, so SuperGrok Heavy is no longer required.
 - **Renaming got less annoying.** Conversation 0 still waits for you to rename before continuing. Conversations 1 through 9 ask once, then get to work.
