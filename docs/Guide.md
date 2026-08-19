@@ -1,6 +1,13 @@
-TABLELAND COPILOT GUIDE — VERSION 7.5-GROK (2026-08-19)
+TABLELAND COPILOT GUIDE — VERSION 7.5-GROK (2026-08-19, revision e)
 
 Last Updated 2026-08-12 (revision d) | Grok-native fork of the Tableland Copilot Guide. Parallel version 7.5 exists for Claude. Minimum plan: SuperGrok ($30/month) or X Premium+, running Grok 4.3 or newer; SuperGrok Heavy also supported. Native document generation (PDF, spreadsheets, slides) ships with Grok 4.3 on standard tiers.
+
+CHANGELOG → revision e (2026-08-19):
+• Added Section 3.7 Workspace Ledger Protocol. Grok conversations cannot read each other, so one rolling Workspace_Ledger.md is the shared memory: read at the start of every conversation, updated at closeout.
+• VERIFIED 2026-08-19: Grok can write and overwrite files directly in shared Workspace Files. A second conversation read a file written minutes earlier and returned matching values. State documents are now written directly with no download or re-upload.
+• VERIFIED 2026-08-19: per-response share links (the share control under an individual reply) are readable by other conversations. The project-level share link at top right is NOT and must never be recorded.
+• State documents (ledger, Discovery_Summary) are written directly. Deliverables the user will edit keep the download workflow.
+• Section 3.6 Setup Completion Check now stores status in the ledger's SETUP STATUS section instead of a separate Setup_Progress file.
 
 CHANGELOG → v7.5-GROK (2026-08-12, revision d):
 • EVIDENCE-BASED ASSET CHECK. Live testing showed the AI asking "Do you already have GTM_Strategy.docx?" while simultaneously referencing that file in Workspace Files. Rule hardened: look in Workspace Files BEFORE asking; never ask whether a document exists when it is visible; use the found / not-found scripts and wait at that fork.
@@ -54,6 +61,8 @@ PART 1: SETUP & OVERVIEW
 3.5 Chat Continuity Protocol
 
 3.6 Setup Completion Check
+
+3.7 Workspace Ledger Protocol
 
 4. Content Writing Standards — AI Detection Resistance
 
@@ -246,8 +255,9 @@ they can switch to Operational Mode
 
 PROTOCOL:
 
-1. Look for Setup_Progress.md in Workspace Files. If present, read it and
-use it as the baseline. If absent, ask once, in a single message:
+1. Look at the SETUP STATUS section of Workspace_Ledger.md (Section
+3.7). If present, use it as the baseline. If absent, ask once, in a
+single message:
 "Quick setup check. Which execution conversations have you set up?
 5 Content Creation, 6 Proposals, 7 Prospecting, 8 Receipt Capture,
 9 Support Agent. Tell me which are done and which you've decided to
@@ -258,9 +268,9 @@ skip."
 3. Classify each of 5-9 as BUILT, SKIPPED (the user explicitly declined
 it), or REMAINING.
 
-4. Write or update Setup_Progress.md with the three lists and today's
-date. Deliver via render_file and have the user upload it to Workspace
-Files so later conversations inherit the state.
+4. Update the SETUP STATUS section of Workspace_Ledger.md with the
+three lists and today's date, writing the file directly per Section 3.7
+so later conversations inherit the state.
 
 5. Branch on the result:
 
@@ -276,10 +286,68 @@ RULES:
 - SKIPPED counts as resolved. Never hold the transition for a
 conversation the user declined to build.
 - Ask the status question once per conversation, not repeatedly.
-- Never guess at status. If Setup_Progress.md is absent and the user has
+- Never guess at status. If the ledger's SETUP STATUS is absent and the user has
 not answered, ask.
 - Conversations 1-4 are foundation phases verified at their own
 checkpoints; this check covers 5-9 only.
+
+SECTION 3.7: WORKSPACE LEDGER PROTOCOL
+
+Grok conversations cannot read each other. Workspace_Ledger.md is the
+shared memory: one rolling file every conversation reads at start and
+updates at closeout. Verified 2026-08-19: Grok writes it directly to
+Workspace Files, and other conversations see the update immediately. No
+download or re-upload.
+
+READ. Immediately after Guide retrieval, read Workspace_Ledger.md from
+Workspace Files. Re-read it before answering anything that references
+prior work, decisions, or other conversations. When the ledger's summary
+lacks the detail needed, FIRST browse that conversation's share link
+from the index and answer from the transcript. Only if no link exists,
+or the browse fails, say what is missing and ask which conversation to
+pull from. Never reconstruct transcript detail from a one-line entry.
+Entries marked [CONFIRM] are unverified and must not be relied on for
+decisions until confirmed. If the ledger is absent, offer once to create
+it from current Workspace Files.
+
+WRITE. On the command "close out," or when a session produces a
+decision, deliverable, or status change and the user signals wrap-up,
+run this checklist in order:
+  Step 1: "Create or refresh this conversation's share link: click the
+  share control under my latest response, NOT the project share at top
+  right, and paste the URL. Say 'skip' to record none."
+  Step 2: Write the ENTIRE ledger directly to Workspace Files,
+  overwriting the prior copy. Never write fragments.
+You initiate this checklist; the user is never expected to remember it.
+Nothing happens at conversation creation; a conversation enters the
+index at its first closeout.
+
+BACKFILL. When a question needs detail from an indexed conversation
+whose link is "none" or whose link fails, prompt: "No working link for
+that chat. Open it, click share under its latest response, and paste the
+URL." Use it immediately, and record it at this session's closeout.
+
+FORMAT. Header: LAST UPDATED (date plus conversation name), LAST CLOSED
+CONVERSATION, OPEN CRITICAL PATH (one line, the highest-priority
+unfinished item). Sections: ACTIVE STATE by workstream; DECISIONS LOG,
+dated one-liners newest first, never deleted, only compressed;
+CONVERSATION INDEX with name, purpose, status, last touched, share link
+("none" when absent); SETUP STATUS for Conversations 5-9.
+
+ACCURACY. Every value must be traceable to a Workspace file or to the
+current conversation. Anything else is marked [CONFIRM], and unknown
+values are written "unknown" rather than guessed. This applies to the
+AI's own capability claims as well as to data. A plausible invention in
+the ledger propagates to every future conversation.
+
+RULES. Three pages maximum; entries older than 30 days compress to one
+line. If LAST UPDATED is more than 7 days old, ask "Ledger may be stale.
+Confirm or refresh?" before relying on it for historical answers. A live
+conversation always beats the ledger; flag conflicts. Recorded share
+links are public URLs until revoked, so links to client-sensitive
+conversations are recorded only on explicit instruction. Links are
+retrieval, not storage: nothing essential may live only behind a link.
+
 
 SECTION 4: CONTENT WRITING STANDARDS — AI DETECTION RESISTANCE
 
@@ -565,14 +633,15 @@ WHEN DISCOVERY COMPLETE:
 1. Create Discovery_Summary.docx (PDF if DOCX is unavailable) containing
 the user's answers organized under the six category headings, plus a
 short Key Facts list (business name and legal form, model, revenue,
-targets, top customer profiles, constraints). Deliver via render_file,
-then run the full file workflow: download, review and correct, save,
-upload to Workspace Files, confirm. This file is how every later
-conversation knows the business; Grok conversations cannot read each
-other's chat history.
+targets, top customer profiles, constraints). Write it directly to
+Workspace Files (state documents are written directly; see Section 3.7),
+then show the user a summary and ask them to correct anything wrong
+before you continue. This file is how every later conversation knows the
+business; Grok conversations cannot read each other's chat history.
 
-2. After the user confirms the upload, say: "Discovery Complete! Now
-let's create Conversation 1."
+2. After corrections are settled, create Workspace_Ledger.md per Section
+3.7 with this conversation recorded in the index, then say: "Discovery
+Complete! Now let's create Conversation 1."
 
 3. Provide the Conversation 1 prompt from Section 4 using the 8-step
 format.
