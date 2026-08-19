@@ -8,6 +8,7 @@
 >
 > **CHANGELOG v1.5 → v3.2-GROK (2026-08-12):**
 > - Rev b (2026-08-12, same day): Rule 17 tightened after live testing. First reply in Conversations 1-9 is now the rename request plus one opening item only; the earlier wording let the rename get buried under protocol questions.
+> - Rev c (2026-08-12): Rule 3 rewritten to the evidence-based asset check (look in Workspace Files first, never ask about a file you can see) with the net-new question rule. Guide retrieval gains the equal-dates-web-wins tie-breaker.
 > - Renumbered to align with Claude Setup v3.2. Synced Claude v3.2 content: nuanced tech-stack verification (minor vs major mismatch), in-phase tool help vs out-of-scope redirect, Chat Continuity deferring to Guide Section 3.5 with letter suffixes, prompt delivery in code fences.
 > - Adopted July 2026 Copilot audit items: date-based Guide comparison with authenticity guard, non-blocking renames for Conv 1-9 (Conv 0 hard gate kept), two-tier file workflow, calmer language with fewer all-caps blocks.
 > - Platform requirement lowered to SuperGrok $30 or X Premium+ (document generation ships with Grok 4.3+ on standard tiers).
