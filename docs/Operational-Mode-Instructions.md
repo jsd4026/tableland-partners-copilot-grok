@@ -7,6 +7,7 @@
 > **Requirements:** SuperGrok ($30/month) or X Premium+, running Grok 4.3 or newer. SuperGrok Heavy also supported. Grok Memory ON recommended.
 >
 > **CHANGELOG v1.7 → v3.3-GROK (2026-08-12):**
+> - Rev b (2026-08-12): Principle 1a gains the net-new question rule (never re-ask what Discovery_Summary.docx or Workspace Files already answer). Guide retrieval gains the equal-dates-web-wins tie-breaker.
 > - Renumbered to align with Claude Ops v3.3. Synced Claude v3.3 member content: conversation scope flexibility, file format decision protocol, prompt delivery format, Chat Continuity deferring to Guide Section 3.5. Claude's Cowork principle not ported (Claude-only product).
 > - Adopted July 2026 Copilot audit items: Fast Path for routine outputs, two-tier file workflow, Model Currency Check on request only, date-based Guide comparison with authenticity guard, calmer language.
 > - Connector protocol adapted to a capability-gaps rule (Grok Workspaces have no third-party connector panel).
